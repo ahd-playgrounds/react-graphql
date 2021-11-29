@@ -1,38 +1,36 @@
-import logo from './logo.svg';
 import './App.css';
-import { useEffect, useState } from 'react';
-import { Hello } from '../shared/types';
+import { FC } from 'react';
+import { ApolloClient, ApolloProvider, InMemoryCache, useQuery, gql } from '@apollo/client';
+
+const client = new ApolloClient({
+  uri: '/',
+  cache: new InMemoryCache(),
+});
 
 function App() {
-  const [res, setRes] = useState(false);
-
-  useEffect(() => {
-    (async () => {
-      const res = await fetch('/api');
-      const json: Hello = await res.json();
-      setRes(json.ok);
-    })();
-  }, []);
-
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-        <pre>server connected: {String(res)}</pre>
+        <ApolloProvider client={client}>
+          <Comp />
+        </ApolloProvider>
       </header>
     </div>
   );
 }
+
+const queryMe = gql`
+  query me {
+    whoami
+  }
+`;
+
+const Comp: FC = () => {
+  const { loading, error, data } = useQuery(queryMe);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error :(</p>;
+  return <div>{data.whoami}</div>;
+};
 
 export default App;
