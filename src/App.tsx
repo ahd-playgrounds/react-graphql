@@ -1,8 +1,19 @@
-import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import { useEffect, useState } from 'react';
+import { Hello } from '../shared/types';
 
 function App() {
+  const [res, setRes] = useState(false);
+
+  useEffect(() => {
+    (async () => {
+      const res = await fetch('/api');
+      const json: Hello = await res.json();
+      setRes(json.ok);
+    })();
+  }, []);
+
   return (
     <div className="App">
       <header className="App-header">
@@ -18,6 +29,7 @@ function App() {
         >
           Learn React
         </a>
+        <pre>server connected: {String(res)}</pre>
       </header>
     </div>
   );
