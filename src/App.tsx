@@ -45,7 +45,6 @@ function App() {
               style={{
                 gridArea: 'payloads',
                 borderTop: 'thin solid grey',
-                background: 'white',
                 textAlign: 'left',
               }}
             >
@@ -55,7 +54,8 @@ function App() {
                 }}
                 direction="y"
               />
-              <ReactJson src={fetchResponse} />
+              <p>Response:</p>
+              <ReactJson src={fetchResponse} theme="twilight" style={{ marginTop: '5px' }} />
             </div>
           </PageWrapper>
         </SdkProvider>
