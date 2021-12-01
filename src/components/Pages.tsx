@@ -11,7 +11,7 @@ export function Home() {
       setJourneys(res.journeys);
       console.log(journeys);
     })();
-  }, [sdk]);
+  }, []);
 
   return (
     <div>

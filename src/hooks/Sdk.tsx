@@ -17,5 +17,6 @@ interface ISdkProvider {
   params: SdkCstr;
 }
 
-export const SdkProvider: FC<ISdkProvider> = ({ children, params }) => <ServiceContext.Provider
-  value={new Sdk(params)}>{children}</ServiceContext.Provider>;
+export const SdkProvider: FC<ISdkProvider> = ({ children, params }) => (
+  <ServiceContext.Provider value={new Sdk(params)}>{children}</ServiceContext.Provider>
+);

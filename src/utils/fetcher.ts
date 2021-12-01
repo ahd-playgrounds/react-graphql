@@ -1,3 +1,13 @@
 import { Fetcher } from '../sdk';
 
-export const fetcher: Fetcher = (params) => fetch(params.url, params).then((res) => res.json());
+interface Handlers {
+  onResponse: (response: any) => void;
+  onRequest?: (request: any) => void;
+}
+export const fetcher: (handlers: Handlers) => Fetcher = (handlers) => (params) =>
+  fetch(params.url, params)
+    .then((res) => res.json())
+    .then((res) => {
+      handlers.onResponse(res);
+      return res;
+    });

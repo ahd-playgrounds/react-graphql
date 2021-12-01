@@ -1,4 +1,4 @@
-import { Journey, ResJourneys } from '../../shared/types';
+import { ResJourneys } from '../../shared/types';
 
 export type Fetcher = (params: {
   url: string;
