@@ -1,10 +1,9 @@
 import express, { Request, Response, NextFunction } from 'express';
 import jsonParser from 'body-parser';
-import { ResHealth, ResJourneys } from '../shared/types';
 import getScenarioCookie from './getScenarioCookie';
+import router from './routes';
 
 const app = express();
-const router = express.Router();
 const port = 4000;
 
 app.use(jsonParser.json());
@@ -36,16 +35,9 @@ app.use('*', (req, out, next) => {
   }
 });
 
-app.get('/api/health', (_, out) => {
-  const payload: ResHealth = { ok: true };
-  out.json(payload);
-});
+app.use('/api', router);
 
-app.post('/api/journeys', (_, out) => {
-  const payload: ResJourneys = { journeys: ['sign-in', 'mfa'] };
-  out.json(payload);
-});
-
+// 404 handler
 app.use('*', (req, out) => {
   out.status(404);
   out.end();
