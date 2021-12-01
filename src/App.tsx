@@ -1,16 +1,28 @@
 import logo from './logo.svg';
 import './App.css';
 import { useEffect, useState } from 'react';
-import { Hello } from '../shared/types';
+import { ResHealth } from '../shared/types';
 
 function App() {
   const [res, setRes] = useState(false);
 
   useEffect(() => {
     (async () => {
-      const res = await fetch('/api');
-      const json: Hello = await res.json();
+      const res = await fetch('/api/health');
+      const json: ResHealth = await res.json();
       setRes(json.ok);
+
+      await fetch('/api/foo');
+
+      await fetch('/api/journeys', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          hello: 'world',
+        }),
+      });
     })();
   }, []);
 
@@ -27,7 +39,7 @@ function App() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Learn React
+          Learn React test
         </a>
         <pre>server connected: {String(res)}</pre>
       </header>
