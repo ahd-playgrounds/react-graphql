@@ -1,30 +1,24 @@
 import { useEffect, useState } from 'react';
-import { ResHealth } from '../../shared/types';
+import { Journey } from '../../shared/types';
+import { useSdk } from '../hooks/Sdk';
 
 export function Home() {
-  const [res, setRes] = useState(false);
-
+  const sdk = useSdk();
+  const [journeys, setJourneys] = useState<null | Journey[]>(null);
   useEffect(() => {
     (async () => {
-      const res = await fetch('/api/health');
-      const json: ResHealth = await res.json();
-      setRes(json.ok);
-
-      await fetch('/api/foo');
-
-      await fetch('/api/journeys', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          hello: 'world',
-        }),
-      });
+      const res = await sdk.journeys();
+      setJourneys(res.journeys);
+      console.log(journeys);
     })();
-  }, []);
+  }, [sdk]);
 
-  return <h2>Home</h2>;
+  return (
+    <div>
+      <h2>Home</h2>
+      <p>available journeys: {journeys ? journeys.join(', ') : 'loading...'}</p>
+    </div>
+  );
 }
 
 export function SignIn() {

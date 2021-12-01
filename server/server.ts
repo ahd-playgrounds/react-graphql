@@ -5,6 +5,10 @@ import router from './routes';
 
 const app = express();
 const port = 4000;
+/**
+ * artificial delay in ms for all responses
+ */
+const delay = 800;
 
 app.use(jsonParser.json());
 
@@ -17,7 +21,9 @@ app.use('*', (req, _, next) => {
     time: new Date().toISOString(),
   });
 
-  next();
+  setTimeout(() => {
+    next();
+  }, delay);
 });
 
 app.use('*', (req, out, next) => {

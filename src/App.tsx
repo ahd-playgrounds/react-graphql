@@ -1,8 +1,10 @@
 import './App.css';
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 import styled from 'styled-components';
 import Navigation from './components/Nav';
 import Routes from './components/Routes';
+import { SdkProvider } from './hooks/Sdk';
+import { fetcher } from './utils/fetcher';
 
 const Page = styled.div`
   display: flex;
@@ -19,8 +21,10 @@ function App() {
     <div className="App">
       <Page>
         <Router>
-          <Navigation />
-          <Routes />
+          <SdkProvider params={{ fetcher }} >
+            <Navigation />
+            <Routes />
+          </SdkProvider>
         </Router>
       </Page>
     </div>
