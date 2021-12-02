@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { useJourneys } from '../hooks/queries';
 
 const Nav = styled.nav`
   width: 50%;
@@ -16,23 +17,39 @@ const Ul = styled.ul`
   gap: 20px;
 `;
 
-const Naviation: FC = () => (
-  <Nav>
-    <Ul>
-      <li>
-        <Link to="/">Home</Link>
-      </li>
-      <li>
-        <Link to="/sign-in">sign-in</Link>
-      </li>
-      <li>
-        <Link to="/sign-out">sign-out</Link>
-      </li>
-      <li>
-        <Link to="/sign-up">sign-up</Link>
-      </li>
-    </Ul>
-  </Nav>
-);
+const Naviation: FC = () => {
+  const { isLoading, error, data } = useJourneys('');
+
+  if (isLoading) return null;
+  if (error) {
+    console.error(error);
+    return null;
+  }
+
+  return (
+    <Nav>
+      <Ul>
+        <li>
+          <Link to="/">Home</Link>
+        </li>
+        {data?.journeys.find((x) => ['sign-in', 'mfa'].includes(x)) && (
+          <li>
+            <Link to="/sign-in">sign-in</Link>
+          </li>
+        )}
+        {data?.journeys.includes('sign-out') && (
+          <li>
+            <Link to="/sign-out">sign-in</Link>
+          </li>
+        )}
+        {data?.journeys.includes('reset-password') && (
+          <li>
+            <Link to="/reset-password">reset passsword</Link>
+          </li>
+        )}
+      </Ul>
+    </Nav>
+  );
+};
 
 export default Naviation;

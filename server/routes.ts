@@ -10,6 +10,6 @@ router.get('/health', (_, out) => {
 });
 
 router.post('/journeys', (_, out) => {
-  const payload: ResJourneys = { journeys: ['sign-in', 'mfa'] };
+  const payload: ResJourneys = { journeys: ['sign-in', 'mfa', 'reset-password'] };
   out.json(payload);
 });

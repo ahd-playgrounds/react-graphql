@@ -1,12 +1,10 @@
-import './App.css';
 import { BrowserRouter as Router } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from 'react-query';
 import styled from 'styled-components';
 import ReactJson from 'react-json-view';
 import Navigation from './components/Nav';
 import Routes from './components/Routes';
-import { SdkProvider } from './hooks/Sdk';
-import { fetcher } from './utils/fetcher';
-import { useState } from 'react';
+import { FC, useState } from 'react';
 import { Draggable } from './components/Draggable';
 import Box from './components/Box';
 
@@ -28,40 +26,51 @@ interface IPage {
   dragHeight: number;
 }
 
+const queryClient = new QueryClient();
+
 function App() {
   const [height, setHeight] = useState(30);
-  const [fetchResponse, setFetchResponse] = useState<any>({});
 
   return (
     <div className="App">
       <Router>
-        <SdkProvider params={{ fetcher: fetcher({ onResponse: setFetchResponse }) }}>
+        <QueryClientProvider client={queryClient}>
           <PageWrapper dragHeight={height} dragWidth={0}>
             <Box style={{ gridArea: 'content', justifyContent: 'flex-start' }}>
               <Navigation />
               <Routes />
             </Box>
-            <div
-              style={{
-                gridArea: 'payloads',
-                borderTop: 'thin solid grey',
-                textAlign: 'left',
-              }}
-            >
-              <Draggable
-                onDragging={({ y }) => {
-                  setHeight(y);
-                }}
-                direction="y"
-              />
-              <p>Response:</p>
-              <ReactJson src={fetchResponse} theme="twilight" style={{ marginTop: '5px' }} />
-            </div>
+            <Payloads setHeight={setHeight} />
           </PageWrapper>
-        </SdkProvider>
+        </QueryClientProvider>
       </Router>
     </div>
   );
 }
+
+interface IPayloads {
+  setHeight: (n: number) => void;
+}
+
+const Payloads: FC<IPayloads> = ({ setHeight }) => {
+  return (
+    <div
+      style={{
+        gridArea: 'payloads',
+        borderTop: 'thin solid grey',
+        textAlign: 'left',
+      }}
+    >
+      <Draggable
+        onDragging={({ y }) => {
+          setHeight(y);
+        }}
+        direction="y"
+      />
+      <p>Response:</p>
+      <ReactJson src={{}} theme="twilight" style={{ marginTop: '5px' }} />
+    </div>
+  );
+};
 
 export default App;

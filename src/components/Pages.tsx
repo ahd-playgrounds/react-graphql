@@ -1,22 +1,17 @@
-import { useEffect, useState } from 'react';
-import { Journey } from '../../shared/types';
-import { useSdk } from '../hooks/Sdk';
+import { useJourneys } from '../hooks/queries';
 
 export function Home() {
-  const sdk = useSdk();
-  const [journeys, setJourneys] = useState<null | Journey[]>(null);
-  useEffect(() => {
-    (async () => {
-      const res = await sdk.journeys();
-      setJourneys(res.journeys);
-      console.log(journeys);
-    })();
-  }, []);
+  const { isLoading, error, data: journeys } = useJourneys('');
+
+  if (isLoading) return null;
+  if (error) {
+    return null;
+  }
 
   return (
     <div>
       <h2>Home</h2>
-      <p>available journeys: {journeys ? journeys.join(', ') : 'loading...'}</p>
+      <p>available journeys: {journeys?.journeys.join(', ')}</p>
     </div>
   );
 }
